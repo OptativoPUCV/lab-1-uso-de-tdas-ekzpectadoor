@@ -43,6 +43,13 @@ Al finalizar retorna la lista creada.
 
 List* crea_lista() {
    List* L = create_list();
+   if (L == NULL) return NULL;
+   for(int i = 1; i <= 10; i++){
+      int* elemento = (int*)malloc(sizeof(int));
+      *elemento = i;
+      pushBack(L, elemento);
+      printf("%d\n", *elemento);
+   }
    return L;
 }
 
@@ -52,7 +59,13 @@ Crea una función que reciba una lista de enteros (int*) y
 retorne la suma de sus elementos.
 */
 int sumaLista(List *L) {
-   return 0;
+   int cont = 0;
+   int *posicion = (int*)first(L);
+   while(posicion != NULL){
+      cont +=  *posicion;
+      posicion = (int*)next(L);
+   }
+   return cont;
 }
 
 /*
@@ -65,7 +78,13 @@ posiciona en el elemento anterior.
 */
 
 void eliminaElementos(List*L, int elem){
-
+   int *posicion = (int*)first(L);
+   while(posicion != NULL){
+      if(*(int*)posicion == elem){
+         popCurrent(L);
+      }
+      posicion = (int*)next(L);
+   }
 }
 
 /*
@@ -76,6 +95,17 @@ Puedes usar una pila auxiliar.
 */
 
 void copia_pila(Stack* P1, Stack* P2) {
+   Stack* pilaAux = create_stack();
+   void* dato;
+   while((dato = top(P1)) != NULL){
+      push(pilaAux, dato);
+      pop(P1);
+   }
+   while((dato = top(pilaAux)) != NULL){
+      push(P1, dato);
+      push(P2, dato);
+      pop(pilaAux);
+   }
 }
 
 /*
@@ -86,6 +116,55 @@ paraéntesis balanceados. Retorna 1 si están balanceados,
 */
 
 int parentesisBalanceados(char *cadena) {
-   return 0;
+   Stack* PilaVuelta = create_stack();
+   Stack* PilaAux = create_stack();
+   int largo = strlen(cadena);
+   for(int i = 0; i < largo; i++){
+      char *elemento = (char*)malloc(sizeof(char));
+      *elemento = cadena[i];
+      push(PilaVuelta, elemento);
+      push(PilaAux, elemento);
+      }
+   
+   Stack* PilaOG = create_stack();
+   while(top(PilaAux) != NULL){
+      push(PilaOG, top(PilaAux));
+      pop(PilaAux);
+   }
+   while(top(PilaOG) != NULL){
+      if(*(char*)top(PilaOG) == '(' ){
+         if((*(char*)top(PilaVuelta)) != '}' && (*(char*)top(PilaVuelta)) != ']'){
+            pop(PilaOG);
+            pop(PilaVuelta);
+         }
+         else{
+            return 0;
+         }
+      }
+      else if(*(char*)top(PilaOG) == '['){
+         if((*(char*)top(PilaVuelta)) == '}' && (*(char*)top(PilaVuelta)) != ')'){
+            pop(PilaOG);
+            pop(PilaVuelta);
+         }
+         else{
+            return 0;
+         }
+      }
+      else if(*(char*)top(PilaOG) == '{'){
+         if((*(char*)top(PilaVuelta)) == ']' && (*(char*)top(PilaVuelta)) != ')'){
+            pop(PilaOG);
+            pop(PilaVuelta);
+         }
+         else{
+            return 0;
+         }
+      }   
+      else{
+         pop(PilaOG);
+         pop(PilaVuelta);
+      }
+   }
+
+   return 1;
 }
 
