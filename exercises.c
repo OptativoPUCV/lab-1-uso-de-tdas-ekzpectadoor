@@ -119,6 +119,9 @@ int parentesisBalanceados(char *cadena) {
    Stack* PilaVuelta = create_stack();
    Stack* PilaAux = create_stack();
    int largo = strlen(cadena);
+   if(largo % 2 != 0){
+      return 0;
+   }
    for(int i = 0; i < largo; i++){
       char *elemento = (char*)malloc(sizeof(char));
       *elemento = cadena[i];
